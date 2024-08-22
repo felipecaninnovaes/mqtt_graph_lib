@@ -54,6 +54,50 @@ A biblioteca será submetida a testes para garantir sua estabilidade e eficiênc
 
 Este trabalho de extensão visa criar uma ferramenta útil para os desenvolvedores
 
+**Implementação**
+- **Instalação**
+``` sh
+git clone https://github.com/felipecaninnovaes/mqtt_graph_lib
+python -m pip install .
+```
+- **Usando MQTT**
+
+Criar ou adicionar as Variaveis de Ambiente.
+
+``` env
+BROKER_ADDRESS = "Endereço do broker MQTT"
+USERNAME = "Usuario"
+PASSWORD = "Senha"
+```
+Adicionar o seguinte codigo para utilizar a biblioteca.
+``` python
+from mqtt_graph import LineOption, MQTTGraph
+from dotenv import load_dotenv
+import os
+
+# Carrega as variáveis de ambiente do arquivo .env
+load_dotenv()
+
+# Configurações do cliente MQTT
+broker_address = os.getenv("BROKER_ADDRESS")  # Endereço do broker MQTT
+username = os.getenv("USERNAME")  # Nome de usuário para autenticação no broker
+password = os.getenv("PASSWORD")  # Senha para autenticação no broker
+topic = "zigbee2mqtt/Interruptor quarto"  # Tópico MQTT
+filters = ["state_l1", "state_l2"]  # Filtros
+
+# Configurações das linhas do gráfico
+line_options = [
+    LineOption(label='Botão 1', key='state_l1', color='blue'),  # Configuração da linha para o estado do botão 1
+    LineOption(label='Botão 2', key='state_l2', color='orange'),  # Configuração da linha para o estado do botão 2
+]
+
+# Inicializa e inicia o gráfico MQTT
+# MQTTGraph é responsável por conectar ao broker MQTT, escutar o tópico especificado,
+# filtrar as mensagens recebidas e atualizar o gráfico com base nas opções de linha fornecidas.
+MQTTGraph(broker_address, username, password, topic, line_options, filter_keys=filters).start()
+```
+
+
 **Integrantes** 
 
 Felipe Canin Novaes: **Documentação/Desenvolvimento**
